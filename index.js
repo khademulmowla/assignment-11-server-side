@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 
 const port = process.env.PORT || 8000
@@ -21,8 +21,19 @@ const client = new MongoClient(uri, {
 });
 async function run() {
     try {
+        const db = client.db('art-db')
+        const artCollection = db.collection('arts')
+
+        // save a art in db //
+        app.post('/add-artifact', async (req, res) => {
+            const artData = req.body;
+            const result = await artCollection.insertOne(artData)
+            res.send(result)
+        })
+
+
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -32,4 +43,9 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
+app.get('/', (req, res) => {
+    res.send('Assignment 11 server is running')
+})
+app.listen(port, () => {
+    console.log(`Assignment 11 is running:${port}`)
+})
