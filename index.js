@@ -30,6 +30,12 @@ async function run() {
             const result = await artCollection.insertOne(artData)
             res.send(result)
         })
+        // get all art data //
+        app.get('/artifacts', async (req, res) => {
+
+            const result = await artCollection.find().toArray()
+            res.send(result)
+        })
 
 
         // Connect the client to the server	(optional starting in v4.7)
