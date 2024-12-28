@@ -36,6 +36,14 @@ async function run() {
             const result = await artCollection.find().toArray()
             res.send(result)
         })
+        //get all artifact posted by a specific user
+        app.get('/artifacts/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email }
+            const result = await artCollection.find(query).toArray()
+            res.send(result)
+
+        })
 
 
         // Connect the client to the server	(optional starting in v4.7)
