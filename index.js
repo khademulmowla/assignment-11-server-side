@@ -58,6 +58,18 @@ async function run() {
             const result = await artCollection.deleteOne(query)
             res.send(result)
         })
+        // update by put //
+        app.put('/update-artifact/:id', async (req, res) => {
+            const id = req.params.id
+            const artData = req.body
+            const updated = {
+                $set: artData
+            }
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const result = await artCollection.updateOne(query, updated, options)
+            res.send(result)
+        })
 
 
         // Connect the client to the server	(optional starting in v4.7)
