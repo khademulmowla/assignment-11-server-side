@@ -51,6 +51,13 @@ async function run() {
             const result = await artCollection.findOne(query)
             res.send(result)
         })
+        // delete a single artifact data by id from db //
+        app.delete('/artifact/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await artCollection.deleteOne(query)
+            res.send(result)
+        })
 
 
         // Connect the client to the server	(optional starting in v4.7)
