@@ -77,7 +77,7 @@ async function run() {
 
         /////////////////////////////////////////////
 
-        // save a liked artifact it db 
+        // save a liked artifact at db 
         app.post('/add-like', async (req, res) => {
             const likeData = req.body
             const query = { email: likeData.email, artLikeId: likeData.artLikeId }
