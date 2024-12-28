@@ -71,6 +71,30 @@ async function run() {
             res.send(result)
         })
 
+        //////////////////////////////////////////////////////////
+        // save a liked artifact it db 
+        app.post('/add-like', async (req, res) => {
+            const likeData = req.body
+            const query = { email: likeData.email, artLikeId: likeData.artLikeId }
+            const alreadyLiked = await likedCollection.findOne(query)
+            if (alreadyLiked) {
+                // If already liked, remove the like
+                const result = await likedCollection.deleteOne(query);
+                const filter = { _id: new ObjectId(likeData.artLikeId) };
+                const update = { $inc: { like_count: -1 } };
+                await artCollection.updateOne(filter, update);
+                return res.send({ message: 'Like removed', isLiked: false });
+            }
+            // save data in like collection 
+            const result = await likedCollection.insertOne(likeData)
+            const filter = { _id: new ObjectId(likeData.artLikeId) }
+            const update = {
+                $inc: { like_count: 1 }
+            }
+            const updateLikeCount = await artCollection.updateOne(filter, update)
+            res.send({ message: 'Like added', isLiked: true });
+        })
+
 
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
