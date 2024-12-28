@@ -103,6 +103,33 @@ async function run() {
             res.send(result)
         })
 
+        // get all artifacts 
+        app.get('/all-artifacts', async (req, res) => {
+            const search = req.query.search
+            let query = {}
+            if (search !== '') {
+                query = { artiName: { $regex: search, $options: 'i' } }
+            }
+            const result = await artCollection.find(query).toArray()
+            console.log(result)
+            res.send(result)
+        })
+
+        // Get top 6 artifacts with the highest like count
+        app.get('/featured-artifacts', async (req, res) => {
+            try {
+                const result = await artCollection
+                    .find()
+                    .sort({ like_count: -1 })
+                    .limit(6)
+                    .toArray();
+                res.send(result);
+            } catch (error) {
+                console.error(error);
+                res.status(500).send('An error occurred while fetching featured artifacts.');
+            }
+        });
+
 
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
