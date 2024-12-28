@@ -95,6 +95,14 @@ async function run() {
             res.send({ message: 'Like added', isLiked: true });
         })
 
+        // get all liked artifact for  specific user //
+        app.get('/liked/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email }
+            const result = await likedCollection.find(query).toArray()
+            res.send(result)
+        })
+
 
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
