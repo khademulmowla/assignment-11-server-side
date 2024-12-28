@@ -23,6 +23,8 @@ async function run() {
     try {
         const db = client.db('art-db')
         const artCollection = db.collection('arts')
+        const likedCollection = db.collection('likes')
+
 
         // save a art in db //
         app.post('/add-artifact', async (req, res) => {
