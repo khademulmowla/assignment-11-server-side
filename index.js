@@ -1,13 +1,15 @@
 const express = require('express')
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 4000
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.iuytv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -19,13 +21,13 @@ const client = new MongoClient(uri, {
         deprecationErrors: true,
     }
 });
+
 async function run() {
     try {
-        const db = client.db('art-db')
+
+        const db = client.db('artifacts')
         const artCollection = db.collection('arts')
         const likedCollection = db.collection('likes')
-
-
         // save a art in db //
         app.post('/add-artifact', async (req, res) => {
             const artData = req.body;
@@ -73,7 +75,8 @@ async function run() {
             res.send(result)
         })
 
-        //////////////////////////////////////////////////////////
+        /////////////////////////////////////////////
+
         // save a liked artifact it db 
         app.post('/add-like', async (req, res) => {
             const likeData = req.body
@@ -116,7 +119,6 @@ async function run() {
             console.log(result)
             res.send(result)
         })
-
         // Get top 6 artifacts with the highest like count
         app.get('/featured-artifacts', async (req, res) => {
             try {
@@ -133,17 +135,15 @@ async function run() {
         });
 
 
-        // Connect the client to the server	(optional starting in v4.7)
-        // await client.connect();
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
     }
 }
 run().catch(console.dir);
+
+
 app.get('/', (req, res) => {
     res.send('Assignment 11 server is running')
 })
